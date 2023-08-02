@@ -1,0 +1,1 @@
+docker build -t cei_ssd:0.1 .
