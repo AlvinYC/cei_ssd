@@ -3,5 +3,6 @@
  --shm-size=256m\
  -p 7788:22\
  -p 8097:8097\
- -v /Users/alvin/dataset/coco2014:/home/docker/coco_data2014\
+ -v /Users/alvin/dataset/coco2014_zip:/home/docker/coco_data2014_zip\
+ -v /Users/alvin/icloud/git_repository/cei_ssd/ssd.pytorch:/home/docker/ssd.pytorch\
  --name ssd cei_ssd:0.1
