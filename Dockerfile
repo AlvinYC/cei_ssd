@@ -4,8 +4,8 @@ MAINTAINER alvin
 ARG user=docker
 ARG local_package=utils_thisbuild
 ARG github=workspace 
-#vscode server 1.54.2
-ARG vscommit=fd6f3bce6709b121a895d042d343d71f317d74e7
+#vscode server 1.79.1 / SDBG 2023 AILAB vscode remote debug
+ARG vscommit=4cb974a7aed77a74c7813bdccd99ee0d04901215
 
 # udpate timezone
 RUN apt-get update \
@@ -19,13 +19,12 @@ RUN TZ=Asia/Taipei \
 # install necessary ubuntu application
 RUN apt-get update && apt-get install -y \
     apt-utils sudo vim zsh curl git make unzip \
-    wget openssh-server rsync iproute2\
-    powerline fonts-powerline 
+    wget openssh-server powerline fonts-powerline 
 
 # install https://github.com/openai/gym mention package
-RUN apt-get install -y libglu1-mesa-dev libgl1-mesa-dev \
-    libosmesa6-dev xvfb ffmpeg curl patchelf \
-    libglfw3 libglfw3-dev cmake zlib1g zlib1g-dev swig
+#RUN apt-get install -y libglu1-mesa-dev libgl1-mesa-dev \
+#    libosmesa6-dev xvfb ffmpeg curl patchelf \
+#    libglfw3 libglfw3-dev cmake zlib1g zlib1g-dev swig
 
 # docker account
 RUN useradd -m ${user} && echo "${user}:${user}" | chpasswd && adduser ${user} sudo;\
@@ -74,10 +73,17 @@ RUN sudo apt-get upgrade -y ;\
     sudo localedef -i en_US -f UTF-8 en_US.UTF-8
 
 # vscode server part
-RUN curl -sSL "https://update.code.visualstudio.com/commit:${vscommit}/server-linux-x64/stable" -o /home/${user}/vscode-server-linux-x64.tar.gz;\
-    mkdir -p ~/.vscode-server/bin/${vscommit};\
-    tar zxvf /home/${user}/vscode-server-linux-x64.tar.gz -C ~/.vscode-server/bin/${vscommit} --strip 1;\
-    touch ~/.vscode-server/bin/${vscommit}/0
+#RUN curl -sSL "https://update.code.visualstudio.com/commit:${vscommit}/server-linux-x64/stable" -o /home/${user}/vscode-server-linux-x64.tar.gz;\
+#    mkdir -p ~/.vscode-server/bin/${vscommit};\
+#    tar zxvf /home/${user}/vscode-server-linux-x64.tar.gz -C ~/.vscode-server/bin/${vscommit} --strip 1;\
+#    touch ~/.vscode-server/bin/${vscommit}/0 && \
+RUN mkdir /home/${user}/vscode_extension
+ADD ./vscode_extension/*.vsix /home/${user}/vscode_extension/
+
+#RUN sudo apt-get install -y libc6-amd64-cross
+#RUN sudo ln -s /usr/x86_64-linux-gnu/lib64/ /lib64
+#ENV LD_LIBRARY_PATH="/lib64:/usr/x86_64-linux-gnu/lib"
+
 
 # pytroch and CV related package
 RUN python -m pip install --user torch==1.13.1;\
